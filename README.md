@@ -1,4 +1,4 @@
-## Hi there 👋
+## GLA-ViT: Global-Local Attention Transformer for Fine-Grained Pneumonia Type Classification in Chest X-rays
 
 <!--
 **GLA-ViT/GLA-ViT** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
