@@ -193,7 +193,6 @@ def train(args):
         print(f'balanced_acc: {balanced_acc_train}, mcc: {mcc_train}')
         logger_train.info(f'epoch = {epoch}')
         logger_train.info(f"Train Confusion Matrix epoch {epoch}:\n{conf_matrix_train}")
-        # logger_train.info(f"Val Confusion Matrix epoch {epoch}:\n{conf_matrix_val}")
         logger_train.info(f"Train - Loss: {train_loss / len(trainloader):.4f}")
         logger_train.info(
             f'Accuracy_per_class_train: {train_accuracy_per_class}, Accuracy_all_train: {train_overall_accuracy}')
