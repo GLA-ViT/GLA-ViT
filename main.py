@@ -17,12 +17,10 @@ parser.add_argument('--mode', action='store', dest='mode', required=True, type=s
 # 分类数、batch size等参数
 parser.add_argument('--CLS', action='store', dest='CLS', required=True, type=int)  # 分类数
 parser.add_argument('--BSZ', action='store', dest='BSZ', required=True, type=int)  # batch size
-parser.add_argument('--IS_TOKEN', action='store', dest='IS_TOKEN', type=bool,
-                    help='use cls token or not', default=True)  # 是否使用cls
 parser.add_argument('--TRAIN_IMG_DIR', action='store', dest='TRAIN_IMG_DIR', type=str,
                     help='Train image directory', default=default_path['default_img_train'])  # 训练图像目录
 parser.add_argument('--TEST_IMG_DIR', action='store', dest='TEST_IMG_DIR', type=str,
-                    help='TEST image directory', default=default_path['default_img_test'])  # 训练图像目录
+                    help='TEST image directory', default=default_path['default_img_test'])  # 测试图像目录
 default_text_dir = default_path['default_text_path']
 parser.add_argument('--TRAIN_DIR', action='store', dest='TRAIN_DIR', type=str, help='Train data directory',
                     default=os.path.join(default_text_dir, 'train.csv'))  # 训练文本路径
@@ -37,5 +35,3 @@ num_epochs = 120
 # 根据模式选择训练或测试
 if args.mode == 'train':
     train(args)
-
-'''python main.py --CLS 3 --BSZ 16 --mode train'''
