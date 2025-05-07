@@ -69,26 +69,20 @@ def train(args):
     # 创建日志文件夹和文件
     os.makedirs(log_dir, exist_ok=True)
     log_file_train = os.path.join(log_dir, "train_log.txt")
-    # 创建训练集 Logger
     logger_train = logging.getLogger('train_logger')
     logger_train.setLevel(logging.INFO)
-    # 创建文件处理器并设置格式
     file_handler_train = logging.FileHandler(log_file_train, mode='w')
     file_handler_train.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-    # 将处理器添加到 logger
     logger_train.addHandler(file_handler_train)
 
-    # 创建测试集日志目录和文件
     os.makedirs(log_dir, exist_ok=True)
     log_file_test = os.path.join(log_dir, "test_log.txt")
-    # 创建测试集 Logger
     logger_test = logging.getLogger('test_logger')
     logger_test.setLevel(logging.INFO)
-    # 创建文件处理器并设置格式
     file_handler_test = logging.FileHandler(log_file_test, mode='w')
     file_handler_test.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-    # 将处理器添加到 logger
     logger_test.addHandler(file_handler_test)
+    
     num_classes = args.CLS
     model =  GLAVit(
         image_size=224,
@@ -167,36 +161,20 @@ def train(args):
         # 统一在整个数据集上计算指标
         # train
         conf_matrix_train = confusion_matrix(all_labels_train, all_preds_train)
-        # 每个类别的accuracy
         train_accuracy_per_class = conf_matrix_train.diagonal() / conf_matrix_train.sum(axis=1)
-        # 总体的accuracy
         train_overall_accuracy = accuracy_score(all_labels_train, all_preds_train)
         avg_train_precision = precision_score(all_labels_train, all_preds_train, average='macro')
-        avg_train_precision_n = precision_score(all_labels_train, all_preds_train, average=None)
-        avg_train_precision_w = precision_score(all_labels_train, all_preds_train, average='weighted')
         avg_train_recall = recall_score(all_labels_train, all_preds_train, average='macro')
-        avg_train_recall_n = recall_score(all_labels_train, all_preds_train, average=None)
-        avg_train_recall_w = recall_score(all_labels_train, all_preds_train, average='weighted')
         avg_train_f1 = f1_score(all_labels_train, all_preds_train, average='macro')
-        avg_train_f1_n = f1_score(all_labels_train, all_preds_train, average=None)
-        avg_train_f1_w = f1_score(all_labels_train, all_preds_train, average='weighted')
         balanced_acc_train = balanced_accuracy_score(all_labels_train, all_preds_train)
         mcc_train = matthews_corrcoef(all_labels_train, all_preds_train)
 
         # test
-        precision = precision_score(all_labels, all_preds, average=None, zero_division=0)
-        recall = recall_score(all_labels, all_preds, average=None, zero_division=0)
-        f1 = f1_score(all_labels, all_preds, average=None, zero_division=0)
-        auroc = roc_auc_score(all_labels, all_probs, average=None, multi_class='ovr')
         conf_matrix = confusion_matrix(all_labels, all_preds)
         precision_m = precision_score(all_labels, all_preds, average='macro', zero_division=0)
         recall_m = recall_score(all_labels, all_preds, average='macro', zero_division=0)
         f1_m = f1_score(all_labels, all_preds, average='macro', zero_division=0)
         auroc_m = roc_auc_score(all_labels, all_probs, average='macro', multi_class='ovr')
-        precision_w = precision_score(all_labels, all_preds, average='weighted', zero_division=0)
-        recall_w = recall_score(all_labels, all_preds, average='weighted', zero_division=0)
-        f1_w = f1_score(all_labels, all_preds, average='weighted', zero_division=0)
-        auroc_w = roc_auc_score(all_labels, all_probs, average='weighted', multi_class='ovr')
         # 每个类别的accuracy
         test_accuracy_per_class = conf_matrix.diagonal() / conf_matrix.sum(axis=1)
         # 总体的accuracy
@@ -211,11 +189,7 @@ def train(args):
         print(f"Train - Loss: {train_loss / len(trainloader):.4f}")
         print(
             f'Accuracy_per_class_train: {train_accuracy_per_class}, Accuracy_all_train: {train_overall_accuracy}')
-        print(
-            f'None: Precision: {avg_train_precision:.4f}, Recall: {avg_train_recall:.4f}, F1: {avg_train_f1:.4f}')
-        print(f"macro: Precision: {avg_train_precision_n}, Recall: {avg_train_recall_n}, F1: {avg_train_f1_n}")
-        print(
-            f"weighted: Precision: {avg_train_precision_w}, Recall: {avg_train_recall_w}, F1: {avg_train_f1_w}")
+        print(f"macro: Precision: {avg_train_precision}, Recall: {avg_train_recall}, F1: {avg_train_f1}")
         print(f'balanced_acc: {balanced_acc_train}, mcc: {mcc_train}')
         logger_train.info(f'epoch = {epoch}')
         logger_train.info(f"Train Confusion Matrix epoch {epoch}:\n{conf_matrix_train}")
@@ -224,30 +198,24 @@ def train(args):
         logger_train.info(
             f'Accuracy_per_class_train: {train_accuracy_per_class}, Accuracy_all_train: {train_overall_accuracy}')
         logger_train.info(
-            f'None: Precision: {avg_train_precision:.4f}, Recall: {avg_train_recall:.4f}, F1: {avg_train_f1:.4f}')
-        logger_train.info(
-            f"macro: Precision: {avg_train_precision_n}, Recall: {avg_train_recall_n}, F1: {avg_train_f1_n}")
-        logger_train.info(
-            f"weighted: Precision: {avg_train_precision_w}, Recall: {avg_train_recall_w}, F1: {avg_train_f1_w}")
+            f"macro: Precision: {avg_train_precision}, Recall: {avg_train_recall}, F1: {avg_train_f1}")
         logger_train.info(f'balanced_acc: {balanced_acc_train}, mcc: {mcc_train}')
 
         # test
         print(f"Confusion Matrix:\n{conf_matrix}")
-        print(
-            f"Precision (None): {precision}  Precision (macro): {precision_m}  Precision (weighted): {precision_w}")
-        print(f"Recall (None): {recall}  Recall (macro): {recall_m}  Recall (weighted): {recall_w}")
-        print(f"F1 Score (None): {f1}  F1 Score (macro): {f1_m}  F1 Score (weighted): {f1_w}")
-        print(f"AUROC (None): {auroc}  AUROC (macro): {auroc_m}  AUROC (weighted): {auroc_w}")
+        print(f"Precision (macro): {precision_m}")
+        print(f"Recall (macro): {recall_m}")
+        print(f"F1 Score (macro): {f1_m}")
+        print(f"AUROC (macro): {auroc_m}")
         print(f'Accuracy_per_class: {test_accuracy_per_class}, Accuracy_all: {test_overall_accuracy}')
         print(f'balanced_acc: {balanced_acc}, mcc: {mcc}')
         print(f'best_acc: {max_acc}')
         logger_test.info(f'epoch = {epoch}')
         logger_test.info(f"Confusion Matrix:\n{conf_matrix}")
-        logger_test.info(
-            f"Precision (None): {precision}  Precision (macro): {precision_m}  Precision (weighted): {precision_w}")
-        logger_test.info(f"Recall (None): {recall}  Recall (macro): {recall_m}  Recall (weighted): {recall_w}")
+        logger_test.info(f"Precision (macro): {precision_m}")
+        logger_test.info(f"Recall (macro): {recall_m}")
         logger_test.info(f"F1 Score (None): {f1}  F1 Score (macro): {f1_m}  F1 Score (weighted): {f1_w}")
-        logger_test.info(f"AUROC (None): {auroc}  AUROC (macro): {auroc_m}  AUROC (weighted): {auroc_w}")
+        logger_test.info(f"AUROC (macro): {auroc_m}")
         logger_test.info(
             f'Accuracy_per_class: {test_accuracy_per_class}, Accuracy_all: {test_overall_accuracy}')
         logger_test.info(f'balanced_acc: {balanced_acc}, mcc: {mcc}')
