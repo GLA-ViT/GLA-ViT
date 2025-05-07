@@ -24,9 +24,7 @@ if not sys.warnoptions:
     warnings.simplefilter("ignore")
 
 class MLPBlock(MLP):
-
     _version = 2
-
     def __init__(self, in_dim: int, mlp_dim: int, dropout: float):
         super().__init__(in_dim, [mlp_dim, in_dim], activation_layer=nn.GELU, inplace=None, dropout=dropout)
 
@@ -74,8 +72,6 @@ class ConvStemConfig(NamedTuple):
     activation_layer: Callable[..., nn.Module] = nn.ReLU
 
 class EncoderBlock(nn.Module):
-    """Transformer encoder block."""
-
     def __init__(
         self,
         num_heads: int,
@@ -109,7 +105,6 @@ class EncoderBlock(nn.Module):
 
 
 class myEncoder(nn.Module):
-    """Transformer Model Encoder for sequence to sequence translation."""
 
     def __init__(
             self,
@@ -147,7 +142,6 @@ class myEncoder(nn.Module):
         return self.ln(self.layers(self.dropout(input)))
 
 class GLAVit(nn.Module):
-
     def __init__(
         self,
         image_size: int,
@@ -286,7 +280,5 @@ class GLAVit(nn.Module):
 
         # Classifier "token" as used by standard language architectures
         x = x[:, 0]
-
         x = self.heads(x)
-
         return x
