@@ -73,7 +73,7 @@ class LungDiseaseDataset(Dataset):
         img_path = self.img_paths[idx]
         label_idx = self.labels[idx]
 
-        # 创建一热编码标签
+        # 创建one-hot编码标签
         label = torch.zeros(3)  # 创建一个3维的零向量
         label[label_idx] = 1  # 设置对应类别的元素为1
 
